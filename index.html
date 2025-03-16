@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Frisbee Score Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 2px;
+        }
+        body * {
+            touch-action: manipulation;
+            -webkit-appearance: none; 
+            -moz-appearance: none;
+            appearance: none;
+        }
+        h1 {
+            font-size: 1em;
+            line-height: 1em;
+            padding: 0;
+            margin: 10px ;
+        }
+        h3 {
+            font-size: 1.5em;
+            line-height: 1em;
+            padding: 0;
+            margin: 10px ;
+        }
+        .score-container {
+            width: 50%;
+        }
+        .score-left {
+            float:left;
+        }
+        .score-right {
+            float:right;
+        }
+        .team {
+            display: inline-block;
+            white-space: nowrap;
+            font-size: clamp(1rem, 3vw, 48px);
+            width: 100%;
+            height: auto;
+            margin: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .score {
+            font-size: 20vw;
+            margin: 10px 0;
+            line-height: 1em;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+            background-color: #f0f0f0;
+        }
+        .toggle-button.active {
+            background-color: #a3a3a3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Madison Area Frisbee Association</h1>
+    <h3>Scoreboard</h3>
+    <div class="score-container score-left">
+        <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
+        <p id="scoreA" class="score">0</p>
+        <button onclick="incrementScore('A')">+1</button>
+        <button onclick="decrementScore('A')">-1</button>
+        <button onclick="resetScore('A')">Reset</button>
+    </div>
+    <div class="score-container score-right">
+        <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
+        <p id="scoreB" class="score">0</p>
+        <button onclick="incrementScore('B')">+1</button>
+        <button onclick="decrementScore('B')">-1</button>
+        <button onclick="resetScore('B')">Reset</button>
+    </div>
+    <br>
+    <p>Current Point: <span id="point-number">0</span></p>
+    <p>Current Ratio: <span id="current-ratio">FMP</span></p>
+    <p>First Ratio:</p>
+    <button class="toggle-button" id="fmp-btn">FMP</button>
+    <button class="toggle-button" id="mmp-btn">MMP</button>
+    <br>
+    <button id="fullscreen-btn">Toggle Fullscreen</button>
+    <script>
+
+        //TEAM NAMES
+            function saveHeader(headerId, storageKey) {
+                const header = document.getElementById(headerId);
+                localStorage.setItem(storageKey, header.innerText);
+            }
+
+            function loadHeader(headerId, storageKey) {
+                const savedValue = localStorage.getItem(storageKey);
+                if (savedValue) {
+                    const header = document.getElementById(headerId);
+                    header.innerText = savedValue;
+                }
+            }
+
+            function loadHeaders() {
+                loadHeader("teamA", "teamAName");
+                loadHeader("teamB", "teamBName");
+            }
+
+            window.onload = loadHeaders;
+
+            document.addEventListener("DOMContentLoaded", () => {
+                // Get all editable headers
+                const headers = document.querySelectorAll("[contenteditable]");
+
+                headers.forEach(header => {
+                    header.addEventListener("keydown", (event) => {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                        }
+                    });
+                });
+            });
+
+        //SCORES
+            let scoreA = localStorage.getItem('scoreA') || 0;
+            let scoreB = localStorage.getItem('scoreB') || 0;
+
+            document.getElementById('scoreA').textContent = scoreA;
+            document.getElementById('scoreB').textContent = scoreB;
+
+            function incrementScore(team) {
+                if (team === 'A') {
+                    scoreA++;
+                    localStorage.setItem('scoreA', scoreA);
+                    document.getElementById('scoreA').textContent = scoreA;
+                } else if (team === 'B') {
+                    scoreB++;
+                    localStorage.setItem('scoreB', scoreB);
+                    document.getElementById('scoreB').textContent = scoreB;
+                }
+                updateCurrentPointAndRatio()
+            }
+
+            function decrementScore(team) {
+                if (team === 'A' && scoreA != 0) {
+                    scoreA--;
+                    localStorage.setItem('scoreA', scoreA);
+                    document.getElementById('scoreA').textContent = scoreA;
+                } else if (team === 'B' && scoreB != 0) {
+                    scoreB--;
+                    localStorage.setItem('scoreB', scoreB);
+                    document.getElementById('scoreB').textContent = scoreB;
+                }
+                updateCurrentPointAndRatio()
+            }
+
+            function resetScore(team) {
+                if (team === 'A') {
+                    scoreA = 0;
+                    localStorage.setItem('scoreA', scoreA);
+                    document.getElementById('scoreA').textContent = scoreA;
+                } else if (team === 'B') {
+                    scoreB = 0;
+                    localStorage.setItem('scoreB', scoreB);
+                    document.getElementById('scoreB').textContent = scoreB;
+                }
+                updateCurrentPointAndRatio()
+            }
+
+        //FMP/MMP
+            const togglebutton = document.querySelectorAll('.toggle-button');
+
+            togglebutton.forEach(button => {
+              button.addEventListener('click', () => {
+                togglebutton.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+              });
+            });
+
+            let firstRatio = 'FMP';
+            let currentRatio = firstRatio;
+            const fmpButton = document.getElementById('fmp-btn');
+            const mmpButton = document.getElementById('mmp-btn');
+            const currentRatioDisplay = document.getElementById('current-ratio');
+            const pointNumberDisplay = document.getElementById('point-number');
+
+            fmpButton.addEventListener('click', () => {
+              firstRatio = 'FMP';
+              updateCurrentPointAndRatio();
+            });
+
+            mmpButton.addEventListener('click', () => {
+              firstRatio = 'MMP';
+              updateCurrentPointAndRatio();
+            });
+
+            function updateCurrentPointAndRatio() {
+              const scoreA = parseInt(localStorage.getItem('scoreA')) || 0;
+              const scoreB = parseInt(localStorage.getItem('scoreB')) || 0;
+
+              const currentPoint = scoreA + scoreB;
+
+              if (Math.floor((currentPoint - 1) / 2) % 2 === -1) {
+                currentRatio = firstRatio;
+              } else if (Math.floor((currentPoint - 1) / 2) % 2 === 0) {
+                currentRatio = firstRatio === 'FMP' ? 'MMP' : 'FMP';
+              } else {
+                currentRatio = firstRatio;
+              }
+
+              pointNumberDisplay.textContent = currentPoint;
+              currentRatioDisplay.textContent = currentRatio;
+            }
+
+        //TOGGLE FULLSCREEN
+            const button = document.getElementById('fullscreen-btn');
+
+            button.addEventListener('click', () => {
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                  console.error(`Error trying to enable fullscreen mode: ${err.message}`);
+                });
+              } else {
+                document.exitFullscreen().catch(err => {
+                  console.error(`Error trying to exit fullscreen mode: ${err.message}`);
+                });
+              }
+            });
+
+        //KEEP DEVICE AWAKE
+            let wakeLock = null;
+
+            async function requestWakeLock() {
+              try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                console.log('Wake Lock is active');
+
+                // Listen for release
+                wakeLock.addEventListener('release', () => {
+                  console.log('Wake Lock was released');
+                });
+              } catch (err) {
+                console.error(`Failed to acquire Wake Lock: ${err.message}`);
+              }
+            }
+
+            document.getElementById('wake-lock-btn').addEventListener('click', requestWakeLock);
+    </script>
+</body>
+</html>
