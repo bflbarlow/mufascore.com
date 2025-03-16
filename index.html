@@ -57,6 +57,9 @@
             margin: 5px;
             font-size: 1em;
             background-color: #f0f0f0;
+            border-radius: 10px;
+            color: #000000;
+            border: solid #000000 2px;
         }
         .toggle-button.active {
             background-color: #a3a3a3;
@@ -64,8 +67,7 @@
     </style>
 </head>
 <body>
-    <h1>Madison Area Frisbee Association</h1>
-    <h3>Scoreboard</h3>
+    <h1>Scoreboard</h1>
     <div class="score-container score-left">
         <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
         <p id="scoreA" class="score">0</p>
