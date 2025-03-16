@@ -6,6 +6,8 @@ A scoreboard for Madison Area Frisbee Association (MUFA) games.
 
 This project was created to easily fit the need of scoring in MUFA games.
 
+With GitHub pages, his project is live at [maufascore.com](https://mufascore.com/).
+
 ## Creator Benjamin Barlow
 
 Benjamin Barlow is a multi-faceted tech nerd living in Madison, Wisconsin. They have a wide variety of skills and hobbies ranging from photography to web development.
