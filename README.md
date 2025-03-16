@@ -6,7 +6,7 @@ A scoreboard for Madison Area Frisbee Association (MUFA) games.
 
 This project was created to easily fit the need of scoring in MUFA games.
 
-With GitHub pages, his project is live at [maufascore.com](https://mufascore.com/).
+With GitHub pages, this project is live at [maufascore.com](https://mufascore.com/).
 
 ## Creator Benjamin Barlow
 
