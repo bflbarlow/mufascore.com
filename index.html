@@ -233,17 +233,26 @@
                 }
                 return result;
               }, {});
-              const data = JSON.stringify(orderedData, null, 2);
+              const now = new Date();
+              const readableDate = now.toLocaleString(undefined, {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  second: "2-digit"
+                });
+              const data = "mufascore.com\n\r"+readableDate+"\n\r"+JSON.stringify(orderedData, null, 2)+"";
               const blob = new Blob([data], { type: 'text/plain' });
+              console.log(blob);
+              console.log(typeof blob);
               const link = document.createElement('a');
               link.href = URL.createObjectURL(blob);
               link.download = 'localStorageData.txt';
               link.click();
               URL.revokeObjectURL(link.href);
             });
-
-
-            // Sort the object keys and create a new ordered object
 
     </script>
 </body>
