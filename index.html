@@ -90,6 +90,8 @@
     <button class="toggle-button" id="mmp-btn">MMP</button>
     <br>
     <button id="fullscreen-btn">Toggle Fullscreen</button>
+    <br>
+    <button id="saveButton">Save Score</button>
     <script>
 
         //TEAM NAMES
@@ -112,7 +114,6 @@
             }
 
             window.onload = loadHeaders;
-
             document.addEventListener("DOMContentLoaded", () => {
                 // Get all editable headers
                 const headers = document.querySelectorAll("[contenteditable]");
@@ -129,7 +130,6 @@
         //SCORES
             let scoreA = localStorage.getItem('scoreA') || 0;
             let scoreB = localStorage.getItem('scoreB') || 0;
-
             document.getElementById('scoreA').textContent = scoreA;
             document.getElementById('scoreB').textContent = scoreB;
 
@@ -174,26 +174,22 @@
 
         //FMP/MMP
             const togglebutton = document.querySelectorAll('.toggle-button');
-
             togglebutton.forEach(button => {
               button.addEventListener('click', () => {
                 togglebutton.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
               });
             });
-
             let firstRatio = 'FMP';
             let currentRatio = firstRatio;
             const fmpButton = document.getElementById('fmp-btn');
             const mmpButton = document.getElementById('mmp-btn');
             const currentRatioDisplay = document.getElementById('current-ratio');
             const pointNumberDisplay = document.getElementById('point-number');
-
             fmpButton.addEventListener('click', () => {
               firstRatio = 'FMP';
               updateCurrentPointAndRatio();
             });
-
             mmpButton.addEventListener('click', () => {
               firstRatio = 'MMP';
               updateCurrentPointAndRatio();
@@ -202,9 +198,7 @@
             function updateCurrentPointAndRatio() {
               const scoreA = parseInt(localStorage.getItem('scoreA')) || 0;
               const scoreB = parseInt(localStorage.getItem('scoreB')) || 0;
-
               const currentPoint = scoreA + scoreB;
-
               if (Math.floor((currentPoint - 1) / 2) % 2 === -1) {
                 currentRatio = firstRatio;
               } else if (Math.floor((currentPoint - 1) / 2) % 2 === 0) {
@@ -212,14 +206,12 @@
               } else {
                 currentRatio = firstRatio;
               }
-
               pointNumberDisplay.textContent = currentPoint;
               currentRatioDisplay.textContent = currentRatio;
             }
 
         //TOGGLE FULLSCREEN
             const button = document.getElementById('fullscreen-btn');
-
             button.addEventListener('click', () => {
               if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
@@ -232,24 +224,27 @@
               }
             });
 
-        //KEEP DEVICE AWAKE
-            let wakeLock = null;
+        //SAVE BUTTON
+            document.getElementById('saveButton').addEventListener('click', function() {
+              const keyOrder = ["teamAName", "scoreA", "teamBName", "scoreB"];
+              const orderedData = keyOrder.reduce((result, key) => {
+                if (localStorage.hasOwnProperty(key)) {
+                  result[key] = localStorage[key];
+                }
+                return result;
+              }, {});
+              const data = JSON.stringify(orderedData, null, 2);
+              const blob = new Blob([data], { type: 'text/plain' });
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = 'localStorageData.txt';
+              link.click();
+              URL.revokeObjectURL(link.href);
+            });
 
-            async function requestWakeLock() {
-              try {
-                wakeLock = await navigator.wakeLock.request('screen');
-                console.log('Wake Lock is active');
 
-                // Listen for release
-                wakeLock.addEventListener('release', () => {
-                  console.log('Wake Lock was released');
-                });
-              } catch (err) {
-                console.error(`Failed to acquire Wake Lock: ${err.message}`);
-              }
-            }
+            // Sort the object keys and create a new ordered object
 
-            document.getElementById('wake-lock-btn').addEventListener('click', requestWakeLock);
     </script>
 </body>
 </html>
