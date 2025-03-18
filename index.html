@@ -8,7 +8,11 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 2px;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
         body * {
             touch-action: manipulation;
@@ -16,17 +20,40 @@
             -moz-appearance: none;
             appearance: none;
         }
+        header {
+            width: 100%;
+            height: auto;
+            margin: 0 0 10px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+        footer {
+            width: 100%;
+            height: auto;
+            margin: 0 0 10px 0;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
         h1 {
             font-size: 1em;
             line-height: 1em;
             padding: 0;
-            margin: 10px ;
+            margin: 2px ;
         }
         h3 {
             font-size: 1.5em;
             line-height: 1em;
             padding: 0;
             margin: 10px ;
+        }
+        p {
+            font-size: 1em;
+            line-height: 1em;
+            padding: 0;
+            margin: 2px 0 ;
+        }
+        .gray-text {
+            color: #828282;
         }
         .score-container {
             width: 50%;
@@ -64,34 +91,60 @@
         .toggle-button.active {
             background-color: #a3a3a3;
         }
+        .options-button {
+            margin: 10px 5px;
+
+        }
+        .display {
+            font-size: 2em;
+            line-height: 1.5em;
+            padding: 0;
+            margin: 10px 0 ;
+        }
+        .options {
+            width: 100%;
+            height: auto;
+            margin: 40px 0 0 0;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
-    <h1>Scoreboard</h1>
-    <div class="score-container score-left">
-        <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
-        <p id="scoreA" class="score">0</p>
-        <button onclick="incrementScore('A')">+1</button>
-        <button onclick="decrementScore('A')">-1</button>
-        <button onclick="resetScore('A')">Reset</button>
-    </div>
-    <div class="score-container score-right">
-        <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
-        <p id="scoreB" class="score">0</p>
-        <button onclick="incrementScore('B')">+1</button>
-        <button onclick="decrementScore('B')">-1</button>
-        <button onclick="resetScore('B')">Reset</button>
-    </div>
-    <br>
-    <p>Current Point: <span id="point-number">0</span></p>
-    <p>Current Ratio: <span id="current-ratio">FMP</span></p>
-    <p>First Ratio:</p>
-    <button class="toggle-button" id="fmp-btn">FMP</button>
-    <button class="toggle-button" id="mmp-btn">MMP</button>
-    <br>
-    <button id="saveButton">Download Score</button>
-    <br>
-    <button id="fullscreen-btn">Toggle Fullscreen</button>
+    <header>
+        <h1 class="gray-text">mufascore.com - Scoreboard for Madison Ultimate Frisbee Association (MUFA)</h1>
+    </header>
+    <main>
+        <div class="score-container score-left">
+            <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
+            <p id="scoreA" class="score">0</p>
+            <button onclick="incrementScore('A')">+1</button>
+            <button onclick="decrementScore('A')">-1</button>
+            <button onclick="resetScore('A')">Reset</button>
+        </div>
+        <div class="score-container score-right">
+            <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
+            <p id="scoreB" class="score">0</p>
+            <button onclick="incrementScore('B')">+1</button>
+            <button onclick="decrementScore('B')">-1</button>
+            <button onclick="resetScore('B')">Reset</button>
+        </div>
+        <br>
+        <p class="display">Current Ratio: <strong><span id="current-ratio">FMP</span></strong></p>
+        <p class="display">Current Point: <span id="point-number">0</span></p>
+        <div class="options">
+            <p>First Ratio:</p>
+            <button class="toggle-button options-button" id="fmp-btn">FMP</button>
+            <button class="toggle-button options-button" id="mmp-btn">MMP</button>
+            <br>
+            <button id="saveButton" class="options-button">Download Score</button>
+            <br>
+            <button id="fullscreen-btn" class="options-button">Toggle Fullscreen</button>
+        </div>
+    </main>
+    <footer>
+        <p class="gray-text">Contribute at <a class="gray-text" href="https://github.com/bflbarlow/mufascore.com">github.com/bflbarlow/mufascore.com</a></p>
+    </footer>
     <script>
 
         //TEAM NAMES
