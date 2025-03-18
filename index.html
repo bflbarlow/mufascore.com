@@ -55,14 +55,31 @@
         .gray-text {
             color: #828282;
         }
+        .scores {
+            margin: 40px 0;
+            height: auto;
+            width: 100%;
+            display: block;
+            overflow: visible;
+        }
+        .scores::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
         .score-container {
             width: 50%;
+            height: auto;
+            display: block;
+            overflow: visible;
         }
         .score-left {
             float:left;
+            display: block;
         }
         .score-right {
             float:right;
+            display: block;
         }
         .team {
             display: inline-block;
@@ -115,19 +132,21 @@
         <h1 class="gray-text">mufascore.com - Scoreboard for Madison Ultimate Frisbee Association (MUFA)</h1>
     </header>
     <main>
-        <div class="score-container score-left">
-            <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
-            <p id="scoreA" class="score">0</p>
-            <button onclick="incrementScore('A')">+1</button>
-            <button onclick="decrementScore('A')">-1</button>
-            <button onclick="resetScore('A')">Reset</button>
-        </div>
-        <div class="score-container score-right">
-            <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
-            <p id="scoreB" class="score">0</p>
-            <button onclick="incrementScore('B')">+1</button>
-            <button onclick="decrementScore('B')">-1</button>
-            <button onclick="resetScore('B')">Reset</button>
+        <div class="scores">
+            <div class="score-container score-left">
+                <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
+                <p id="scoreA" class="score">0</p>
+                <button onclick="incrementScore('A')">+1</button>
+                <button onclick="decrementScore('A')">-1</button>
+                <button onclick="resetScore('A')">Reset</button>
+            </div>
+            <div class="score-container score-right">
+                <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
+                <p id="scoreB" class="score">0</p>
+                <button onclick="incrementScore('B')">+1</button>
+                <button onclick="decrementScore('B')">-1</button>
+                <button onclick="resetScore('B')">Reset</button>
+            </div>
         </div>
         <br>
         <p class="display">Current Ratio: <strong><span id="current-ratio">FMP</span></strong></p>
