@@ -153,9 +153,11 @@
             <button class="toggle-button options-button" id="fmp-btn">FMP</button>
             <button class="toggle-button options-button" id="mmp-btn">MMP</button>
             <br>
-            <button id="saveButton" class="options-button">Download Score</button>
-            <br>
             <button id="fullscreen-btn" class="options-button">Toggle Fullscreen</button>
+            <br>
+            <button id="resetAll" class="options-button">Reset All</button>
+            <br>
+            <button id="saveButton" class="options-button">Download Score</button>
         </div>
     </main>
     <footer>
@@ -258,7 +260,9 @@
                 button.classList.add('active');
               });
             });
-
+            if (!localStorage.getItem('firstRatio')) {
+              localStorage.setItem('firstRatio', 'FMP');
+            };
             let firstRatio = localStorage.getItem('firstRatio')
             let currentRatio = firstRatio;
             const fmpButton = document.getElementById('fmp-btn');
@@ -341,6 +345,13 @@
               link.click();
               URL.revokeObjectURL(link.href);
             });
+
+        //RESET ALL
+        const resetAllButton = document.getElementById("resetAll");
+        resetAllButton.addEventListener("click", () => {
+          localStorage.clear();
+          window.location.reload();
+        });
 
     </script>
 </body>
