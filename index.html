@@ -132,14 +132,14 @@
         <div class="scores">
             <div class="score-container score-left">
                 <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
-                <p id="scoreA" class="score">0</p>
+                <p id="teamAScore" class="score">0</p>
                 <button onclick="incrementScore('A')">+1</button>
                 <button onclick="decrementScore('A')">-1</button>
                 <button onclick="resetScore('A')">Reset</button>
             </div>
             <div class="score-container score-right">
                 <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
-                <p id="scoreB" class="score">0</p>
+                <p id="teamBScore" class="score">0</p>
                 <button onclick="incrementScore('B')">+1</button>
                 <button onclick="decrementScore('B')">-1</button>
                 <button onclick="resetScore('B')">Reset</button>
@@ -163,6 +163,15 @@
         <p class="gray-text">Contribute at <a class="gray-text" href="https://github.com/bflbarlow/mufascore.com">github.com/bflbarlow/mufascore.com</a></p>
     </footer>
     <script>
+        //ON LOAD
+
+            function loadState() {
+                loadHeaders();
+                loadFirstRatio();
+                updateCurrentPointAndRatio();
+            }
+
+            window.onload = loadState;
 
         //TEAM NAMES
             function saveHeader(headerId, storageKey) {
@@ -183,7 +192,6 @@
                 loadHeader("teamB", "teamBName");
             }
 
-            window.onload = loadHeaders;
             document.addEventListener("DOMContentLoaded", () => {
                 // Get all editable headers
                 const headers = document.querySelectorAll("[contenteditable]");
@@ -198,46 +206,46 @@
             });
 
         //SCORES
-            let scoreA = localStorage.getItem('scoreA') || 0;
-            let scoreB = localStorage.getItem('scoreB') || 0;
-            document.getElementById('scoreA').textContent = scoreA;
-            document.getElementById('scoreB').textContent = scoreB;
+            let teamAScore = localStorage.getItem('teamAScore') || 0;
+            let teamBScore = localStorage.getItem('teamBScore') || 0;
+            document.getElementById('teamAScore').textContent = teamAScore;
+            document.getElementById('teamBScore').textContent = teamBScore;
 
             function incrementScore(team) {
                 if (team === 'A') {
-                    scoreA++;
-                    localStorage.setItem('scoreA', scoreA);
-                    document.getElementById('scoreA').textContent = scoreA;
+                    teamAScore++;
+                    localStorage.setItem('teamAScore', teamAScore);
+                    document.getElementById('teamAScore').textContent = teamAScore;
                 } else if (team === 'B') {
-                    scoreB++;
-                    localStorage.setItem('scoreB', scoreB);
-                    document.getElementById('scoreB').textContent = scoreB;
+                    teamBScore++;
+                    localStorage.setItem('teamBScore', teamBScore);
+                    document.getElementById('teamBScore').textContent = teamBScore;
                 }
                 updateCurrentPointAndRatio()
             }
 
             function decrementScore(team) {
-                if (team === 'A' && scoreA != 0) {
-                    scoreA--;
-                    localStorage.setItem('scoreA', scoreA);
-                    document.getElementById('scoreA').textContent = scoreA;
-                } else if (team === 'B' && scoreB != 0) {
-                    scoreB--;
-                    localStorage.setItem('scoreB', scoreB);
-                    document.getElementById('scoreB').textContent = scoreB;
+                if (team === 'A' && teamAScore != 0) {
+                    teamAScore--;
+                    localStorage.setItem('teamAScore', teamAScore);
+                    document.getElementById('teamAScore').textContent = teamAScore;
+                } else if (team === 'B' && teamBScore != 0) {
+                    teamBScore--;
+                    localStorage.setItem('teamBScore', teamBScore);
+                    document.getElementById('teamBScore').textContent = teamBScore;
                 }
                 updateCurrentPointAndRatio()
             }
 
             function resetScore(team) {
                 if (team === 'A') {
-                    scoreA = 0;
-                    localStorage.setItem('scoreA', scoreA);
-                    document.getElementById('scoreA').textContent = scoreA;
+                    teamAScore = 0;
+                    localStorage.setItem('teamAScore', teamAScore);
+                    document.getElementById('teamAScore').textContent = teamAScore;
                 } else if (team === 'B') {
-                    scoreB = 0;
-                    localStorage.setItem('scoreB', scoreB);
-                    document.getElementById('scoreB').textContent = scoreB;
+                    teamBScore = 0;
+                    localStorage.setItem('teamBScore', teamBScore);
+                    document.getElementById('teamBScore').textContent = teamBScore;
                 }
                 updateCurrentPointAndRatio()
             }
@@ -250,7 +258,8 @@
                 button.classList.add('active');
               });
             });
-            let firstRatio = 'FMP';
+
+            let firstRatio = localStorage.getItem('firstRatio')
             let currentRatio = firstRatio;
             const fmpButton = document.getElementById('fmp-btn');
             const mmpButton = document.getElementById('mmp-btn');
@@ -259,16 +268,18 @@
             fmpButton.addEventListener('click', () => {
               firstRatio = 'FMP';
               updateCurrentPointAndRatio();
+              localStorage.setItem('firstRatio', 'FMP');
             });
             mmpButton.addEventListener('click', () => {
               firstRatio = 'MMP';
               updateCurrentPointAndRatio();
+              localStorage.setItem('firstRatio', 'MMP');
             });
 
             function updateCurrentPointAndRatio() {
-              const scoreA = parseInt(localStorage.getItem('scoreA')) || 0;
-              const scoreB = parseInt(localStorage.getItem('scoreB')) || 0;
-              const currentPoint = scoreA + scoreB;
+              const teamAScore = parseInt(localStorage.getItem('teamAScore')) || 0;
+              const teamBScore = parseInt(localStorage.getItem('teamBScore')) || 0;
+              const currentPoint = teamAScore + teamBScore;
               if (Math.floor((currentPoint - 1) / 2) % 2 === -1) {
                 currentRatio = firstRatio;
               } else if (Math.floor((currentPoint - 1) / 2) % 2 === 0) {
@@ -278,7 +289,15 @@
               }
               pointNumberDisplay.textContent = currentPoint;
               currentRatioDisplay.textContent = currentRatio;
-            }
+            };
+
+            function loadFirstRatio() {
+              if (localStorage.getItem('firstRatio') === 'FMP') {
+                fmpButton.classList.add('active');
+              } else {
+                mmpButton.classList.add('active');
+              }
+            };
 
         //TOGGLE FULLSCREEN
             const button = document.getElementById('fullscreen-btn');
@@ -296,7 +315,7 @@
 
         //SAVE BUTTON
             document.getElementById('saveButton').addEventListener('click', function() {
-              const keyOrder = ["teamAName", "scoreA", "teamBName", "scoreB"];
+              const keyOrder = ["teamAName", "teamAScore", "teamBName", "teamBScore", "firstRatio"];
               const orderedData = keyOrder.reduce((result, key) => {
                 if (localStorage.hasOwnProperty(key)) {
                   result[key] = localStorage[key];
