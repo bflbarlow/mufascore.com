@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUFA Scoreboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body * {
+            touch-action: manipulation;
+            -webkit-appearance: none; 
+            -moz-appearance: none;
+            appearance: none;
+        }
+        header {
+            width: 100%;
+            height: auto;
+            margin: 0 0 10px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+        footer {
+            width: 100%;
+            height: auto;
+            margin: 0 0 10px 0;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+        main {
+            margin: 50px;
+        }
+        h1 {
+            font-size: 2em;
+            line-height: 1.5em;
+            padding: 0;
+            margin: 5px ;
+        }
+        h3 {
+            font-size: 1.5em;
+            line-height: 1em;
+            padding: 0;
+            margin: 10px ;
+        }
+        h4 {
+            font-size: 1.5em;
+            line-height: 1em;
+            padding: 0;
+            margin: 10px ;
+        }
+        p {
+            font-size: 1.5em;
+            line-height: 1.5em;
+            padding: 0;
+            margin: 50px 0 ;
+        }
+        .left-align {
+            text-align: left;
+        }
+        .gray-text {
+            color: #828282;
+        }
+        .scores {
+            margin: 40px 0;
+            height: auto;
+            width: 100%;
+            display: block;
+            overflow: visible;
+        }
+        .scores::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .score-container {
+            width: 50%;
+            height: auto;
+            display: block;
+            overflow: visible;
+        }
+        .score-left {
+            float:left;
+            display: block;
+        }
+        .score-right {
+            float:right;
+            display: block;
+        }
+        .team {
+            display: inline-block;
+            white-space: nowrap;
+            font-size: clamp(1rem, 3vw, 48px);
+            width: 100%;
+            height: auto;
+            margin: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .score {
+            font-size: 20vw;
+            margin: 10px 0;
+            line-height: 1em;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            color: #000000;
+            border: solid #000000 2px;
+        }
+        .toggle-button.active {
+            background-color: #a3a3a3;
+        }
+        .options-button {
+            margin: 10px 5px;
+
+        }
+        .display {
+            font-size: 2em;
+            line-height: 1.5em;
+            padding: 0;
+            margin: 10px 0 ;
+        }
+        .options {
+            width: 100%;
+            height: auto;
+            margin: 40px 0 0 0;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1 class="left-align">About mufascore.com</h1>
+        <p class="left-align">Created by <a href="https://benjaminbarlow.com/">Benjamin Barlow</a>, in the spring of 2025. Benjamin has been playing in MUFA for almost a decade and decided to finally tackle a scoreboard that is specifically designed for coed ultimate frisbee. And this is it!</p>
+        <p class="left-align">The code that runs this site is open source. Feel free to fork/contribute/comments/etc at <a href="https://github.com/bflbarlow/mufascore.com">github.com/bflbarlow/mufascore.com</a>.</p>
+    </main>
+    <footer>
+        <h4 class="gray-text">mufascore.com - Scoreboard for Madison Ultimate Frisbee Association (MUFA)</h4>
+        <p class="gray-text">Contribute at <a class="gray-text" href="https://github.com/bflbarlow/mufascore.com">github.com/bflbarlow/mufascore.com</a></p>
+    </footer>
+</body>
+</html>
