@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUFA Scoreboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body * {
+            touch-action: manipulation;
+            -webkit-appearance: none; 
+            -moz-appearance: none;
+            appearance: none;
+        }
+        header {
+            width: 100%;
+            height: auto;
+            margin: 0 0 10px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+        footer {
+            width: 100%;
+            height: auto;
+            margin: 0 0 10px 0;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-size: 1em;
+            line-height: 1.5em;
+            padding: 0;
+            margin: 5px ;
+        }
+        h3 {
+            font-size: 1.5em;
+            line-height: 1em;
+            padding: 0;
+            margin: 10px ;
+        }
+        p {
+            font-size: 1em;
+            line-height: 1em;
+            padding: 0;
+            margin: 2px 0 ;
+        }
+        .gray-text {
+            color: #828282;
+        }
+        .scores {
+            margin: 40px 0;
+            height: auto;
+            width: 100%;
+            display: block;
+            overflow: visible;
+        }
+        .scores::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .score-container {
+            width: 50%;
+            height: auto;
+            display: block;
+            overflow: visible;
+        }
+        .score-left {
+            float:left;
+            display: block;
+        }
+        .score-right {
+            float:right;
+            display: block;
+        }
+        .team {
+            display: inline-block;
+            white-space: nowrap;
+            font-size: clamp(1rem, 3vw, 48px);
+            width: 100%;
+            height: auto;
+            margin: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .score {
+            font-size: 20vw;
+            margin: 10px 0;
+            line-height: 1em;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            color: #000000;
+            border: solid #000000 2px;
+        }
+        .toggle-button.active {
+            background-color: #a3a3a3;
+        }
+        .options-button {
+            margin: 10px 5px;
+
+        }
+        .display {
+            font-size: 2em;
+            line-height: 1.5em;
+            padding: 0;
+            margin: 10px 0 ;
+        }
+        .options {
+            width: 100%;
+            height: auto;
+            margin: 40px 0 0 0;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="scores">
+            <div class="score-container score-left">
+                <h2 contenteditable="true" id="teamA" class="team" oninput="saveHeader('teamA', 'teamAName')">[Team A]</h2>
+                <p id="teamAScore" class="score">0</p>
+                <button onclick="incrementScore('A')">+1</button>
+                <button onclick="decrementScore('A')">-1</button>
+                <button onclick="resetScore('A')">Reset</button>
+            </div>
+            <div class="score-container score-right">
+                <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
+                <p id="teamBScore" class="score">0</p>
+                <button onclick="incrementScore('B')">+1</button>
+                <button onclick="decrementScore('B')">-1</button>
+                <button onclick="resetScore('B')">Reset</button>
+            </div>
+        </div>
+        <br>
+        <p class="display">Current Ratio: <strong><span id="current-ratio">FMP</span></strong></p>
+        <p class="display">Current Point: <span id="point-number">0</span></p>
+        <div class="options">
+            <p>First Ratio:</p>
+            <button class="toggle-button options-button" id="fmp-btn">FMP</button>
+            <button class="toggle-button options-button" id="mmp-btn">MMP</button>
+            <br>
+            <button id="fullscreen-btn" class="options-button">Toggle Fullscreen</button>
+            <br>
+            <button id="saveButton" class="options-button">Download Score</button>
+            <br>
+            <button id="resetAll" class="options-button">Reset All</button>
+        </div>
+    </main>
+    <footer>
+        <h1 class="gray-text">mufascore.com - Scoreboard for Madison Ultimate Frisbee Association (MUFA)</h1>
+        <p class="gray-text">Contribute at <a class="gray-text" href="https://github.com/bflbarlow/mufascore.com">github.com/bflbarlow/mufascore.com</a></p>
+    </footer>
+    <script>
+        //ON LOAD
+
+            function loadState() {
+                loadHeaders();
+                loadFirstRatio();
+                updateCurrentPointAndRatio();
+            }
+
+            window.onload = loadState;
+
+        //TEAM NAMES
+            function saveHeader(headerId, storageKey) {
+                const header = document.getElementById(headerId);
+                localStorage.setItem(storageKey, header.innerText);
+            }
+
+            function loadHeader(headerId, storageKey) {
+                const savedValue = localStorage.getItem(storageKey);
+                if (savedValue) {
+                    const header = document.getElementById(headerId);
+                    header.innerText = savedValue;
+                }
+            }
+
+            function loadHeaders() {
+                loadHeader("teamA", "teamAName");
+                loadHeader("teamB", "teamBName");
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                // Get all editable headers
+                const headers = document.querySelectorAll("[contenteditable]");
+
+                headers.forEach(header => {
+                    header.addEventListener("keydown", (event) => {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                        }
+                    });
+                });
+            });
+
+        //SCORES
+            let teamAScore = localStorage.getItem('teamAScore') || 0;
+            let teamBScore = localStorage.getItem('teamBScore') || 0;
+            document.getElementById('teamAScore').textContent = teamAScore;
+            document.getElementById('teamBScore').textContent = teamBScore;
+
+            function incrementScore(team) {
+                if (team === 'A') {
+                    teamAScore++;
+                    localStorage.setItem('teamAScore', teamAScore);
+                    document.getElementById('teamAScore').textContent = teamAScore;
+                } else if (team === 'B') {
+                    teamBScore++;
+                    localStorage.setItem('teamBScore', teamBScore);
+                    document.getElementById('teamBScore').textContent = teamBScore;
+                }
+                updateCurrentPointAndRatio()
+            }
+
+            function decrementScore(team) {
+                if (team === 'A' && teamAScore != 0) {
+                    teamAScore--;
+                    localStorage.setItem('teamAScore', teamAScore);
+                    document.getElementById('teamAScore').textContent = teamAScore;
+                } else if (team === 'B' && teamBScore != 0) {
+                    teamBScore--;
+                    localStorage.setItem('teamBScore', teamBScore);
+                    document.getElementById('teamBScore').textContent = teamBScore;
+                }
+                updateCurrentPointAndRatio()
+            }
+
+            function resetScore(team) {
+                if (team === 'A') {
+                    teamAScore = 0;
+                    localStorage.setItem('teamAScore', teamAScore);
+                    document.getElementById('teamAScore').textContent = teamAScore;
+                } else if (team === 'B') {
+                    teamBScore = 0;
+                    localStorage.setItem('teamBScore', teamBScore);
+                    document.getElementById('teamBScore').textContent = teamBScore;
+                }
+                updateCurrentPointAndRatio()
+            }
+
+        //FMP/MMP
+            const togglebutton = document.querySelectorAll('.toggle-button');
+            togglebutton.forEach(button => {
+              button.addEventListener('click', () => {
+                togglebutton.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+              });
+            });
+            if (!localStorage.getItem('firstRatio')) {
+              localStorage.setItem('firstRatio', 'FMP');
+            };
+            let firstRatio = localStorage.getItem('firstRatio')
+            let currentRatio = firstRatio;
+            const fmpButton = document.getElementById('fmp-btn');
+            const mmpButton = document.getElementById('mmp-btn');
+            const currentRatioDisplay = document.getElementById('current-ratio');
+            const pointNumberDisplay = document.getElementById('point-number');
+            fmpButton.addEventListener('click', () => {
+              firstRatio = 'FMP';
+              updateCurrentPointAndRatio();
+              localStorage.setItem('firstRatio', 'FMP');
+            });
+            mmpButton.addEventListener('click', () => {
+              firstRatio = 'MMP';
+              updateCurrentPointAndRatio();
+              localStorage.setItem('firstRatio', 'MMP');
+            });
+
+            function updateCurrentPointAndRatio() {
+              const teamAScore = parseInt(localStorage.getItem('teamAScore')) || 0;
+              const teamBScore = parseInt(localStorage.getItem('teamBScore')) || 0;
+              const currentPoint = teamAScore + teamBScore;
+              if (Math.floor((currentPoint - 1) / 2) % 2 === -1) {
+                currentRatio = firstRatio;
+              } else if (Math.floor((currentPoint - 1) / 2) % 2 === 0) {
+                currentRatio = firstRatio === 'FMP' ? 'MMP' : 'FMP';
+              } else {
+                currentRatio = firstRatio;
+              }
+              pointNumberDisplay.textContent = currentPoint;
+              currentRatioDisplay.textContent = currentRatio;
+            };
+
+            function loadFirstRatio() {
+              if (localStorage.getItem('firstRatio') === 'MMP') {
+                mmpButton.classList.add('active');
+              } else {
+                fmpButton.classList.add('active');
+              }
+            };
+
+        //TOGGLE FULLSCREEN
+            const button = document.getElementById('fullscreen-btn');
+            button.addEventListener('click', () => {
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                  console.error(`Error trying to enable fullscreen mode: ${err.message}`);
+                });
+              } else {
+                document.exitFullscreen().catch(err => {
+                  console.error(`Error trying to exit fullscreen mode: ${err.message}`);
+                });
+              }
+            });
+
+        //SAVE BUTTON
+            document.getElementById('saveButton').addEventListener('click', function() {
+              const keyOrder = ["teamAName", "teamAScore", "teamBName", "teamBScore", "firstRatio"];
+              const orderedData = keyOrder.reduce((result, key) => {
+                if (localStorage.hasOwnProperty(key)) {
+                  result[key] = localStorage[key];
+                }
+                return result;
+              }, {});
+              const now = new Date();
+              const readableDate = now.toLocaleString(undefined, {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  second: "2-digit"
+                });
+              const fileDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}`;
+              const data = "mufascore.com\n\r"+readableDate+"\n\r"+JSON.stringify(orderedData, null, 2)+"";
+              const blob = new Blob([data], { type: 'text/plain' });
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = 'mufascore-'+fileDate+'.txt';
+              link.click();
+              URL.revokeObjectURL(link.href);
+            });
+
+        //RESET ALL
+        const resetAllButton = document.getElementById("resetAll");
+        resetAllButton.addEventListener("click", () => {
+          localStorage.clear();
+          window.location.reload();
+        });
+
+    //WAKE LOCK
+        let wakeLock = null;
+
+        async function requestWakeLock() {
+          try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => {
+            });
+          } catch (err) {
+            console.error(`Failed to acquire wake lock: ${err.name}, ${err.message}`);
+          }
+        };
+
+        document.addEventListener('visibilitychange', async () => {
+          if (document.visibilityState === 'visible') {
+            await requestWakeLock();
+          } else {
+            if (wakeLock) {
+              await wakeLock.release();
+              wakeLock = null;
+            }
+          }
+        });
+
+        requestWakeLock();
+
+    </script>
+</body>
+</html>
