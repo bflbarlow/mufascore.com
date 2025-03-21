@@ -353,6 +353,32 @@
           window.location.reload();
         });
 
+    //WAKE LOCK
+        let wakeLock = null;
+
+        async function requestWakeLock() {
+          try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => {
+            });
+          } catch (err) {
+            console.error(`Failed to acquire wake lock: ${err.name}, ${err.message}`);
+          }
+        };
+
+        document.addEventListener('visibilitychange', async () => {
+          if (document.visibilityState === 'visible') {
+            await requestWakeLock();
+          } else {
+            if (wakeLock) {
+              await wakeLock.release();
+              wakeLock = null;
+            }
+          }
+        });
+
+        requestWakeLock();
+
     </script>
 </body>
 </html>
