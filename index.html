@@ -217,11 +217,11 @@
             document.getElementById('teamBScore').textContent = teamBScore;
 
             function incrementScore(team) {
-                if (team === 'A') {
+                if (team === 'A' && teamAScore < 99) {
                     teamAScore++;
                     localStorage.setItem('teamAScore', teamAScore);
                     document.getElementById('teamAScore').textContent = teamAScore;
-                } else if (team === 'B') {
+                } else if (team === 'B' && teamBScore < 99) {
                     teamBScore++;
                     localStorage.setItem('teamBScore', teamBScore);
                     document.getElementById('teamBScore').textContent = teamBScore;
