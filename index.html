@@ -128,6 +128,17 @@
             padding: 20px 0;
             background-color: #f0f0f0;
         }
+        .dot {
+          height: 25px;
+          width: 25px;
+          background-color: #f0f0f0;
+          border-radius: 50%;
+          display: inline-block;
+          border: solid #000000 1px;
+        }
+        .dot.active {
+          background-color: #707070;
+        }
     </style>
 </head>
 <body>
@@ -138,19 +149,34 @@
                 <p id="teamAScore" class="score">0</p>
                 <button onclick="incrementScore('A')">+1</button>
                 <button onclick="decrementScore('A')">-1</button>
-                <button onclick="resetScore('A')">Reset</button>
+                <!-- <button onclick="resetScore('A')">Reset</button>-->
+                <!-- <br> -->
+                <!-- <br> -->
+                <!-- <span class="dot"></span> -->
+                <!-- <span class="dot"></span> -->
+                <!-- <span class="dot"></span> -->
+                <!-- <br> -->
+                <!-- <button onclick="setTimeout('A')">Time Out</button> -->
             </div>
             <div class="score-container score-right">
                 <h2 contenteditable="true" id="teamB" class="team" oninput="saveHeader('teamB', 'teamBName')">[Team B]</h2>
                 <p id="teamBScore" class="score">0</p>
                 <button onclick="incrementScore('B')">+1</button>
                 <button onclick="decrementScore('B')">-1</button>
-                <button onclick="resetScore('B')">Reset</button>
+                <!-- <button onclick="resetScore('B')">Reset</button>> -->
+                <!-- <br> -->
+                <!-- <br> -->
+                <!-- <span class="dot active"></span> -->
+                <!-- <span class="dot"></span> -->
+                <!-- <span class="dot"></span> -->
+                <!-- <br> -->
+                <!-- <button onclick="setTimeout('B')">Time Out</button> -->
             </div>
         </div>
         <br>
         <p class="display">Current Ratio: <strong><span id="current-ratio">FMP</span></strong></p>
-        <p class="display">Current Point: <span id="point-number">0</span></p>
+        <!-- <p class="display">Current Point: <span id="current-point">0</span></p> -->
+        <p class="display">Total Points: <span id="total-points">0</span></p>
         <div class="options">
             <p>First Ratio:</p>
             <button class="toggle-button options-button" id="fmp-btn">FMP</button>
@@ -258,6 +284,8 @@
                 updateCurrentPointAndRatio()
             }
 
+        //Timeouts
+
         //FMP/MMP
             const togglebutton = document.querySelectorAll('.toggle-button');
             togglebutton.forEach(button => {
@@ -274,7 +302,8 @@
             const fmpButton = document.getElementById('fmp-btn');
             const mmpButton = document.getElementById('mmp-btn');
             const currentRatioDisplay = document.getElementById('current-ratio');
-            const pointNumberDisplay = document.getElementById('point-number');
+            const currentPointDisplay = document.getElementById('current-point');
+            const totalPointsDisplay = document.getElementById('total-points');
             fmpButton.addEventListener('click', () => {
               firstRatio = 'FMP';
               updateCurrentPointAndRatio();
@@ -289,7 +318,8 @@
             function updateCurrentPointAndRatio() {
               const teamAScore = parseInt(localStorage.getItem('teamAScore')) || 0;
               const teamBScore = parseInt(localStorage.getItem('teamBScore')) || 0;
-              const currentPoint = teamAScore + teamBScore;
+              const currentPoint = teamAScore + teamBScore + 1;
+              const totalPoints = teamAScore + teamBScore;
               if (Math.floor((currentPoint - 1) / 2) % 2 === -1) {
                 currentRatio = firstRatio;
               } else if (Math.floor((currentPoint - 1) / 2) % 2 === 0) {
@@ -297,7 +327,8 @@
               } else {
                 currentRatio = firstRatio;
               }
-              pointNumberDisplay.textContent = currentPoint;
+              //currentPointDisplay.textContent = currentPoint;
+              totalPointsDisplay.textContent = totalPoints;
               currentRatioDisplay.textContent = currentRatio;
             };
 
