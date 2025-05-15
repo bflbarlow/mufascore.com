@@ -320,9 +320,9 @@
               const teamBScore = parseInt(localStorage.getItem('teamBScore')) || 0;
               const currentPoint = teamAScore + teamBScore + 1;
               const totalPoints = teamAScore + teamBScore;
-              if (Math.floor((currentPoint - 1) / 2) % 2 === -1) {
+              if (Math.floor((totalPoints - 1) / 2) % 2 === -1) {
                 currentRatio = firstRatio;
-              } else if (Math.floor((currentPoint - 1) / 2) % 2 === 0) {
+              } else if (Math.floor((totalPoints - 1) / 2) % 2 === 0) {
                 currentRatio = firstRatio === 'FMP' ? 'MMP' : 'FMP';
               } else {
                 currentRatio = firstRatio;
